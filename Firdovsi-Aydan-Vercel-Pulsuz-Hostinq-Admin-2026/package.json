@@ -1,0 +1,11 @@
+{
+  "name": "firdovsi-aydan-wedding-vercel-upstash",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Vercel Hobby + Upstash Free toy masa axtarisi ve admin paneli",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "test": "node tests/api.test.mjs"
+  }
+}
