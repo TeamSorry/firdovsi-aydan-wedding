@@ -132,13 +132,7 @@ function passwordVerify(password, stored) {
   const actual = pbkdf2Sync(password, salt, rounds, expected.length, 'sha256');
   return timingSafeEqual(actual, expected);
 }
-function installCodeOk(value) {
-  const expected = process.env.ADMIN_SETUP_KEY || '';
-  if (expected.length < 12 || typeof value !== 'string') return false;
-  const a = createHash('sha256').update(value).digest();
-  const b = createHash('sha256').update(expected).digest();
-  return timingSafeEqual(a, b);
-}
+
 function norm(value) {
   return String(value || '').toLocaleLowerCase('az').normalize('NFC')
     .replace(/ə/g, 'e').replace(/ı/g, 'i').replace(/ö/g, 'o')
@@ -218,8 +212,6 @@ export default async function handler(req, res) {
       const saved = await redis(['GET', ADMIN_KEY]);
       if (action === 'setup') {
         if (saved) throw new ApiError('Admin parolu artıq müəyyən edilib.', 409);
-        if (!process.env.ADMIN_SETUP_KEY || process.env.ADMIN_SETUP_KEY.length < 12) throw new ApiError('Vercel-də ADMIN_SETUP_KEY əlavə edin (ən azı 12 simvol).', 503);
-        if (!installCodeOk(body.installCode)) { await failedAttempt(req); throw new ApiError('Quraşdırma kodu yanlışdır.', 401); }
         const ok = await redis(['SET', ADMIN_KEY, passwordHash(body.password), 'NX']);
         if (ok !== 'OK') throw new ApiError('İlk admin parolu artıq yaradılıb.', 409);
       } else {

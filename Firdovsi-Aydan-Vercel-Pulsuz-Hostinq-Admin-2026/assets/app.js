@@ -198,7 +198,7 @@
       event.preventDefault();const setup=$('login-form').dataset.initialized==='false';const password=$('password').value;
       if(setup&&password!==$('repeat').value){$('login-error').hidden=false;$('login-error').textContent='Parollar uyğun gəlmir.';return;}
       const submit=$('login-button');submit.disabled=true;
-      try{await request(setup?'setup':'login',{password,...(setup?{installCode:$('install-code').value.trim()}:{})});$('login-error').hidden=true;$('password').value='';await initialize();}
+      try{await request(setup?'setup':'login',{password});$('login-error').hidden=true;$('password').value='';await initialize();}
       catch(e){$('login-error').textContent=e.message;$('login-error').hidden=false;}
       finally{submit.disabled=false;}
     });
